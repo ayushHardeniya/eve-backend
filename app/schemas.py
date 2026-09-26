@@ -40,6 +40,12 @@ class Test(TestCreate):
     model_config = ConfigDict(from_attributes=True)
 
 
+class CentreTestResponse(BaseModel):
+    id: int
+    name: str
+    price: Decimal
+
+
 class CentreTestCreate(BaseModel):
     test_id: int
     price: Decimal = Field(gt=0)

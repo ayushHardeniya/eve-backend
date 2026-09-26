@@ -54,4 +54,3 @@ def me(
         raise HTTPException(status_code=401, detail="User not found")
 
     return {"id": user.id, "email": user.email}
-    

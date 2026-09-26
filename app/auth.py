@@ -23,9 +23,7 @@ def verify_password(password: str, password_hash: str) -> bool:
 
 
 def create_token(user_id: int) -> str:
-    expires = datetime.now(timezone.utc) + timedelta(
-        minutes=TOKEN_EXPIRE_MINUTES
-    )
+    expires = datetime.now(timezone.utc) + timedelta(minutes=TOKEN_EXPIRE_MINUTES)
     data = {"sub": str(user_id), "exp": expires}
 
     return jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
@@ -42,4 +40,3 @@ def get_user_id(token: str) -> int:
         return int(user_id)
     except (JWTError, ValueError):
         raise ValueError("Invalid token")
-        

@@ -1,0 +1,15 @@
+[project]
+name = "eve-backend"
+version = "0.1.0"
+description = "backend service for diagnostic test bookings and simulated payments"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

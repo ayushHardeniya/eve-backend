@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16
+    container_name: eve-db
+    environment:
+      POSTGRES_DB: eve
+      POSTGRES_USER: eve
+      POSTGRES_PASSWORD: eve
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

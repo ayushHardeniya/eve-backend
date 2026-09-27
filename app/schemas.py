@@ -71,6 +71,7 @@ class Booking(BaseModel):
 
 class PaymentCreate(BaseModel):
     booking_id: int
+    status: str
 
 
 class Payment(BaseModel):

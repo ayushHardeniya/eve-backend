@@ -1,13 +1,20 @@
 from datetime import datetime, timedelta, timezone
 
 from argon2 import PasswordHasher
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
+from sqlalchemy.orm import Session
+
+from app.database import get_db
+from app.models import User
 
 SECRET_KEY = "change-this-secret"
 ALGORITHM = "HS256"
 TOKEN_EXPIRE_MINUTES = 60
 
 password_hasher = PasswordHasher()
+security = HTTPBearer()
 
 
 def hash_password(password: str) -> str:
@@ -40,3 +47,20 @@ def get_user_id(token: str) -> int:
         return int(user_id)
     except (JWTError, ValueError):
         raise ValueError("Invalid token")
+
+
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db),
+) -> User:
+    try:
+        user_id = get_user_id(credentials.credentials)
+    except ValueError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+    user = db.get(User, user_id)
+
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+
+    return user

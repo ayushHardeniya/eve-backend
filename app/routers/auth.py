@@ -1,15 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.auth import create_token, get_user_id, hash_password, verify_password
+from app.auth import create_token, get_current_user, hash_password, verify_password
 from app.database import get_db
 from app.models import User
 from app.schemas import Login, Token, UserCreate
 
 router = APIRouter(prefix="/auth", tags=["auth"])
-security = HTTPBearer()
 
 
 @router.post("/signup", response_model=Token)
@@ -40,17 +38,5 @@ def login(data: Login, db: Session = Depends(get_db)):
 
 
 @router.get("/me")
-def me(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: Session = Depends(get_db),
-):
-    try:
-        user_id = get_user_id(credentials.credentials)
-    except ValueError:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
-    user = db.get(User, user_id)
-    if not user:
-        raise HTTPException(status_code=401, detail="User not found")
-
-    return {"id": user.id, "email": user.email}
+def me(current_user: User = Depends(get_current_user)):
+    return {"id": current_user.id, "email": current_user.email}

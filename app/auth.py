@@ -6,12 +6,13 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
+from app.config import settings
 from app.database import get_db
 from app.models import User
 
-SECRET_KEY = "change-this-secret"
+SECRET_KEY = settings.secret_key
 ALGORITHM = "HS256"
-TOKEN_EXPIRE_MINUTES = 60
+TOKEN_EXPIRE_MINUTES = settings.token_expire_minutes
 
 password_hasher = PasswordHasher()
 security = HTTPBearer()

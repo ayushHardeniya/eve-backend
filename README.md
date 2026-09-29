@@ -4,34 +4,45 @@ Backend service for diagnostic test bookings and simulated payments.
 
 Built with FastAPI, PostgreSQL, SQLAlchemy and Alembic.
 
-## Setup
+## Quick start
+
+Requirements: Docker and Docker Compose.
+
+```bash
+git clone https://github.com/ayushHardeniya/eve-backend.git
+cd eve-backend
+docker compose up --build
+```
+
+The API will be available at:
+
+`http://localhost:8000` or `http://127.0.0.1:8000`
+
+Swagger docs:
+
+`http://localhost:8000/docs`
+
+![swagger-ui](docs/swagger-ui.png)
+
+That's it.
+
+## Local development
+
+If you want to run the app without the application container:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
-```
-
-Start PostgreSQL:
-
-```bash
-docker compose up -d
-```
-
-Run migrations:
-
-```bash
+docker compose up -d db
 alembic upgrade head
-```
-
-Start the server:
-
-```bash
 uvicorn app.main:app --reload
 ```
 
-API docs: `http://127.0.0.1:8000/docs`
+## Architecture
+
+live at: https://excalidraw.com/#room=642cc2a929c7d24f98c1,gwoq2Zjysk_SZTwfUXjl_w
 
 ## Tech stack
 
@@ -41,7 +52,7 @@ API docs: `http://127.0.0.1:8000/docs`
 - SQLAlchemy
 - Alembic
 - Pydantic
-- JWT + Argon2 for authentication
+- JWT + Argon2
 - Pytest
 - Ruff
 - Docker Compose
@@ -101,6 +112,12 @@ Main tables:
 - A booking can have one payment.
 
 ## Testing
+
+```bash
+make test
+```
+
+or
 
 ```bash
 pytest -q
